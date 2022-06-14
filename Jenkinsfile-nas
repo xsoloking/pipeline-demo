@@ -1,0 +1,47 @@
+
+// Uses Declarative syntax to run commands inside a container.
+pipeline {
+    agent {
+        kubernetes {
+            // Rather than inline YAML, in a multibranch Pipeline you could use: yamlFile 'jenkins-pod.yaml'
+            // Or, to avoid YAML:
+            // containerTemplate {
+            //     name 'shell'
+            //     image 'ubuntu'
+            //     command 'sleep'
+            //     args 'infinity'
+            // }
+            yaml '''
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: shell
+    image: ubuntu
+    command:
+    - sleep
+    args:
+    - infinity
+'''
+            defaultContainer 'shell'
+            // mount nas to /home/jenkins/agent
+            workspaceVolume nfsWorkspaceVolume(serverAddress: "172.16.31.179", serverPath: "/nas", readOnly: false)
+            // set default workspace to /home/jenkins/agent/[flowExecutionId], used by each task in the one flow exection.
+            customWorkspace "/home/jenkins/agent/" + params.flowExecutionId
+        }
+    }
+    
+    parameters {
+        string(name: 'flowExecutionId', defaultValue: '123456', description: 'Flow Execution ID')
+    }
+    stages {
+        stage('Main') {
+            steps {
+                sh "echo abc > abc; ls -al"
+                sh 'pwd; df -h; '
+                echo "Security Risk Example:"
+                sh "cd ..; ls -al; echo 'Switch to other pipeline instance workspace, get source code'"
+            }
+        }
+    }
+}

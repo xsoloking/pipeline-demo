@@ -1,11 +1,11 @@
-library identifier: 'mylibs@main',
-    //'master' refers to a valid git-ref
-    //'mylibraryname' can be any name you like
-    retriever: modernSCM([
-      $class: 'GitSCMSource',
-      credentialsId: 'fcb6251b-a639-43c8-a009-ca68c4571bf1',
-      remote: 'https://github.com/xsoloking/shared-libs-demo.git'
-])
+// library identifier: 'mylibs@main',
+//     //'master' refers to a valid git-ref
+//     //'mylibraryname' can be any name you like
+//     retriever: modernSCM([
+//       $class: 'GitSCMSource',
+//       credentialsId: 'fcb6251b-a639-43c8-a009-ca68c4571bf1',
+//       remote: 'https://github.com/xsoloking/shared-libs-demo.git'
+// ])
 
 properties([
     parameters([
